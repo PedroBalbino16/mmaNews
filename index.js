@@ -1,7 +1,5 @@
 const puppeteer = require("puppeteer")
 const fs = require("fs/promises")
-const util = require('util'); // Importe o módulo util
-const writeFileAsync = util.promisify(fs.writeFile);
 
 async function start() {
   const browser = await puppeteer.launch()
@@ -9,7 +7,7 @@ async function start() {
   await page.setDefaultNavigationTimeout(0);
   await page.goto("https://www.espn.com.br/mma/")
 
-
+  //Catch the titles
   const f = await page.$("[class='contentItem__title contentItem__title--hero contentItem__title--story']")
   const text = await (await f.getProperty('textContent')).jsonValue()
 
@@ -22,9 +20,9 @@ async function start() {
   
   for (let i = 0; i < newsTitles.length; i++) {
     const newsTitle = newsTitles[i];
-    const fileName = `noticia_${i}.txt`;
+    const fileName = `news_${i+1}.txt`;
     const filePath = `${folderName}/${fileName}`;
-    console.log('News', i, ': ', newsTitle)
+    console.log('News', i+1, ': ', newsTitle)
 
     fs.writeFile(filePath, newsTitle)
   }
