@@ -7,7 +7,29 @@ async function scrapeNewsTitlesAndDescriptions() {
   await page.setDefaultNavigationTimeout(0);
   await page.goto("https://www.espn.com.br/mma/");
 
-  // Scrape news titles and descriptions
+  async function autoScroll(page){
+    await page.evaluate(async () => {
+        await new Promise((resolve, reject) => {
+            var totalHeight = 0;
+            var distance = 300;
+            var timer = setInterval(() => {
+                var scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, distance);
+                totalHeight += distance;
+                
+                if (totalHeight >= scrollHeight) {
+                    clearInterval(timer);
+                    resolve();
+                }
+            }, 100);
+        });
+    });
+  }
+
+  // Scroll down to trigger dynamic content loading
+  await autoScroll(page);
+
+  // Scrape news titles and descriptions after dynamic content loading
   const newsData = await page.evaluate(() => {
     const titles = Array.from(
       document.querySelectorAll(
