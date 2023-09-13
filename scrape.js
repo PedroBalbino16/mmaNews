@@ -11,7 +11,7 @@ async function scrapeNewsTitlesAndDescriptions() {
     await page.evaluate(async () => {
         await new Promise((resolve, reject) => {
             var totalHeight = 0;
-            var distance = 300;
+            var distance = 100;
             var timer = setInterval(() => {
                 var scrollHeight = document.body.scrollHeight;
                 window.scrollBy(0, distance);
@@ -63,7 +63,11 @@ async function scrapeNewsTitlesAndDescriptions() {
     console.log('News', i + 1, ': ', newsItem);
 
     await fs.writeFile(filePath, contentToAdd);
+
   }
+  const form = await page.$("[class='contentItem__contentWrapper']");
+  await form.evaluate( form => form.click() );
+
 
   await browser.close();
 }
